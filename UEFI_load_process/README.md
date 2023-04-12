@@ -14,24 +14,24 @@
 Опций загрузки может быть несколько, каждая про свое, ну и есть порядок загрузки. Рассмотрим одну из загрузочных записей.
 
 Понять, что это за партиция, очень просто:
-![Выделение](/dokumentacija-mind-migration/mini-gajjdy-po-os/kak-proisxodit-zagruzka-po-uefi/.files/vydelenie338.png)
+![Выделение](./vydelenie338.png)
 
 UUID из вывода `efibootmgr -v` указывает на UUID GPT партиции на нашем диске. Тип у нее **всегда** будет такой (*C12A7328-F81F-11D2-BA4B-00A0C93EC93B*).
 
 Понимаем, что это /dev/vda1 - там живет UEFI first-stage bootloader.
 
 Смотрим, куда он примонтирован:
-![Выделение](/dokumentacija-mind-migration/mini-gajjdy-po-os/kak-proisxodit-zagruzka-po-uefi/.files/vydelenie339.png)
+![Выделение](./vydelenie339.png)
 
 Идем туда и смотрим, что там есть:
 
-![Выделение](/dokumentacija-mind-migration/mini-gajjdy-po-os/kak-proisxodit-zagruzka-po-uefi/.files/vydelenie340.png)
+![Выделение](./vydelenie340.png)
 
 Там всегда есть наш загрузчик и grub.cfg - загрузчик, похоже, ищет его рядом с собой.
 
 Содержимое grub.cfg будет отличаться в зависимости от используемого загрузчика. В частности, в случае использования **shim** там будет конфиг, где указано, где искать другой конфиг GRUB.
 
-![Выделение](/dokumentacija-mind-migration/mini-gajjdy-po-os/kak-proisxodit-zagruzka-po-uefi/.files/vydelenie341.png)
+![Выделение](./vydelenie341.png)
 
 Здесь написано, что в качестве root (/) для UEFI first-stage bootloader мы используем раздел /dev/vda2, который на самом деле /boot. Там живет конфиг grub.cfg, который, если посмотреть внутрь, ссылается на vmlinuz и initrd в своих menuentry, которые должны быть доступны в этом самом root (/) загрузчика (в корне или во вложенных каталогах).
 
